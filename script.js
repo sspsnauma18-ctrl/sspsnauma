@@ -1,11 +1,11 @@
 /* =====================================================
    SWAMI SHANTANAND PUBLIC SCHOOL
-   PREMIUM 3D WEBSITE JAVASCRIPT
+   SSPS - MAIN JAVASCRIPT
 ===================================================== */
 
 
 /* =====================================================
-                MOBILE NAVIGATION
+   MOBILE MENU
 ===================================================== */
 
 const menuBtn = document.getElementById("menuBtn");
@@ -13,33 +13,26 @@ const navbar = document.getElementById("navbar");
 
 if (menuBtn && navbar) {
 
-    menuBtn.addEventListener("click", () => {
+    menuBtn.addEventListener("click", function () {
 
         navbar.classList.toggle("active");
 
         if (navbar.classList.contains("active")) {
-
             menuBtn.innerHTML = "✕";
-
         } else {
-
             menuBtn.innerHTML = "☰";
-
         }
 
     });
 
 
-    /* Close menu after clicking a link */
-
     const navLinks = navbar.querySelectorAll("a");
 
-    navLinks.forEach(link => {
+    navLinks.forEach(function (link) {
 
-        link.addEventListener("click", () => {
+        link.addEventListener("click", function () {
 
             navbar.classList.remove("active");
-
             menuBtn.innerHTML = "☰";
 
         });
@@ -51,29 +44,22 @@ if (menuBtn && navbar) {
 
 
 /* =====================================================
-                HEADER SCROLL EFFECT
+   HEADER SCROLL EFFECT
 ===================================================== */
 
 const header = document.querySelector(".header");
 
-window.addEventListener("scroll", () => {
+window.addEventListener("scroll", function () {
 
     if (!header) return;
 
     if (window.scrollY > 50) {
 
-        header.style.background =
-            "rgba(3, 14, 27, 0.96)";
-
-        header.style.boxShadow =
-            "0 10px 35px rgba(0,0,0,.25)";
+        header.classList.add("scrolled");
 
     } else {
 
-        header.style.background =
-            "rgba(4, 17, 31, .82)";
-
-        header.style.boxShadow = "none";
+        header.classList.remove("scrolled");
 
     }
 
@@ -82,19 +68,62 @@ window.addEventListener("scroll", () => {
 
 
 /* =====================================================
-                3D TILT EFFECT
+   SMOOTH SCROLL
 ===================================================== */
 
-const tiltCards = document.querySelectorAll(".tilt");
+document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+
+    link.addEventListener("click", function (event) {
+
+        const targetId = this.getAttribute("href");
+
+        if (!targetId || targetId === "#") {
+            return;
+        }
+
+        const target = document.querySelector(targetId);
+
+        if (!target) {
+            return;
+        }
+
+        event.preventDefault();
+
+        const headerHeight =
+            header ? header.offsetHeight : 0;
+
+        const targetPosition =
+            target.offsetTop - headerHeight;
+
+        window.scrollTo({
+
+            top: targetPosition,
+
+            behavior: "smooth"
+
+        });
+
+    });
+
+});
 
 
-tiltCards.forEach(card => {
 
-    card.addEventListener("mousemove", (event) => {
+/* =====================================================
+   3D CARD TILT EFFECT
+===================================================== */
 
-        /* Mobile devices don't need tilt */
+const tiltCards =
+    document.querySelectorAll(".tilt");
 
-        if (window.innerWidth < 768) return;
+
+tiltCards.forEach(function (card) {
+
+    card.addEventListener("mousemove", function (event) {
+
+        if (window.innerWidth < 768) {
+            return;
+        }
 
 
         const rect =
@@ -118,27 +147,27 @@ tiltCards.forEach(card => {
 
 
         const rotateX =
-            ((y - centerY) / centerY) * -5;
+            ((y - centerY) / centerY) * -6;
 
 
         const rotateY =
-            ((x - centerX) / centerX) * 5;
+            ((x - centerX) / centerX) * 6;
 
 
         card.style.transform =
             `perspective(1000px)
              rotateX(${rotateX}deg)
              rotateY(${rotateY}deg)
-             translateY(-6px)
-             scale3d(1.01,1.01,1.01)`;
+             translateY(-8px)
+             scale(1.02)`;
 
     });
 
 
-    card.addEventListener("mouseleave", () => {
+    card.addEventListener("mouseleave", function () {
 
         card.style.transform =
-            "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale3d(1,1,1)";
+            "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)";
 
     });
 
@@ -147,49 +176,7 @@ tiltCards.forEach(card => {
 
 
 /* =====================================================
-                HERO PARALLAX EFFECT
-===================================================== */
-
-const hero = document.querySelector(".hero");
-const heroBackground =
-    document.querySelector(".hero-background");
-
-
-if (hero && heroBackground) {
-
-    hero.addEventListener("mousemove", (event) => {
-
-        if (window.innerWidth < 768) return;
-
-
-        const x =
-            (event.clientX / window.innerWidth - 0.5);
-
-
-        const y =
-            (event.clientY / window.innerHeight - 0.5);
-
-
-        heroBackground.style.transform =
-            `scale(1.08)
-             translate(${x * -12}px, ${y * -12}px)`;
-
-    });
-
-
-    hero.addEventListener("mouseleave", () => {
-
-        heroBackground.style.transform =
-            "scale(1.08) translate(0,0)";
-
-    });
-
-}
-
-
-
-/* =====================================================
-                REVEAL ANIMATION
+   SCROLL REVEAL ANIMATION
 ===================================================== */
 
 const revealElements =
@@ -205,35 +192,23 @@ const revealElements =
         ".notice-card, " +
         ".admission-card, " +
         ".service-card, " +
-        ".contact-item"
+        ".contact-item, " +
+        ".admission-form-wrapper"
     );
-
-
-revealElements.forEach(element => {
-
-    element.style.opacity = "0";
-
-    element.style.transform =
-        "translateY(35px)";
-
-    element.style.transition =
-        "opacity .8s ease, transform .8s ease";
-
-});
 
 
 const revealObserver =
     new IntersectionObserver(
-        (entries, observer) => {
 
-            entries.forEach(entry => {
+        function (entries, observer) {
+
+            entries.forEach(function (entry) {
 
                 if (entry.isIntersecting) {
 
-                    entry.target.style.opacity = "1";
-
-                    entry.target.style.transform =
-                        "translateY(0)";
+                    entry.target.classList.add(
+                        "show"
+                    );
 
                     observer.unobserve(
                         entry.target
@@ -244,13 +219,15 @@ const revealObserver =
             });
 
         },
+
         {
             threshold: 0.12
         }
+
     );
 
 
-revealElements.forEach(element => {
+revealElements.forEach(function (element) {
 
     revealObserver.observe(element);
 
@@ -259,60 +236,32 @@ revealElements.forEach(element => {
 
 
 /* =====================================================
-                STAGGER CARD ANIMATION
-===================================================== */
-
-const cardGroups = [
-
-    ".achievement-card",
-    ".academic-card",
-    ".facility-card",
-    ".notice-card",
-    ".admission-card",
-    ".service-card"
-
-];
-
-
-cardGroups.forEach(selector => {
-
-    const cards =
-        document.querySelectorAll(selector);
-
-
-    cards.forEach((card, index) => {
-
-        card.style.transitionDelay =
-            `${index * 0.08}s`;
-
-    });
-
-});
-
-
-
-/* =====================================================
-                ACTIVE NAVIGATION
+   ACTIVE NAVIGATION
 ===================================================== */
 
 const sections =
     document.querySelectorAll("section[id]");
 
 const navigationLinks =
-    document.querySelectorAll("nav a");
+    document.querySelectorAll(
+        "#navbar a"
+    );
 
 
-window.addEventListener("scroll", () => {
+window.addEventListener("scroll", function () {
 
     let currentSection = "";
 
-    sections.forEach(section => {
+
+    sections.forEach(function (section) {
 
         const sectionTop =
-            section.offsetTop - 150;
+            section.offsetTop - 180;
+
 
         const sectionHeight =
             section.offsetHeight;
+
 
         if (
             window.scrollY >= sectionTop &&
@@ -328,16 +277,17 @@ window.addEventListener("scroll", () => {
     });
 
 
-    navigationLinks.forEach(link => {
+    navigationLinks.forEach(function (link) {
 
         link.classList.remove("active");
+
 
         const href =
             link.getAttribute("href");
 
 
         if (
-            href === `#${currentSection}`
+            href === "#" + currentSection
         ) {
 
             link.classList.add("active");
@@ -351,173 +301,299 @@ window.addEventListener("scroll", () => {
 
 
 /* =====================================================
-                SMOOTH SCROLL
+   HERO MOUSE PARALLAX
 ===================================================== */
 
-navigationLinks.forEach(link => {
-
-    link.addEventListener("click", function(event) {
-
-        const targetId =
-            this.getAttribute("href");
-
-
-        if (
-            targetId &&
-            targetId.startsWith("#")
-        ) {
-
-            const target =
-                document.querySelector(targetId);
-
-
-            if (target) {
-
-                event.preventDefault();
-
-
-                const headerHeight =
-                    header ?
-                    header.offsetHeight :
-                    0;
-
-
-                const targetPosition =
-                    target.offsetTop -
-                    headerHeight;
-
-
-                window.scrollTo({
-
-                    top: targetPosition,
-
-                    behavior: "smooth"
-
-                });
-
-            }
-
-        }
-
-    });
-
-});
-
-
-
-/* =====================================================
-                HERO MOUSE LIGHT EFFECT
-===================================================== */
-
-if (hero) {
-
-    hero.addEventListener("mousemove", (event) => {
-
-        if (window.innerWidth < 768) return;
-
-
-        const x =
-            event.clientX;
-
-        const y =
-            event.clientY;
-
-
-        hero.style.setProperty(
-            "--mouse-x",
-            `${x}px`
-        );
-
-
-        hero.style.setProperty(
-            "--mouse-y",
-            `${y}px`
-        );
-
-    });
-
-}
-
-
-
-/* =====================================================
-                IMAGE LOADING EFFECT
-===================================================== */
-
-const images =
-    document.querySelectorAll("img");
-
-
-images.forEach(img => {
-
-    img.addEventListener("load", () => {
-
-        img.classList.add("loaded");
-
-    });
-
-
-    img.addEventListener("error", () => {
-
-        console.warn(
-            "Image could not be loaded:",
-            img.src
-        );
-
-    });
-
-});
-
-
-
-/* =====================================================
-                CURRENT YEAR
-===================================================== */
-
-const copyright =
-    document.querySelector(".copyright");
-
-
-if (copyright) {
-
-    const year =
-        new Date().getFullYear();
-
-
-    copyright.innerHTML =
-        `© ${year} Swami Shantanand Public School. All Rights Reserved.`;
-
-}
-
-
-
-/* =====================================================
-                DIGITAL SERVICE LINKS
-===================================================== */
-
-const appLinks =
-    document.querySelectorAll(
-        '.service-card[href]'
+const hero =
+    document.querySelector(".hero");
+
+const heroBackground =
+    document.querySelector(
+        ".hero-background"
     );
 
 
-appLinks.forEach(link => {
+if (hero && heroBackground) {
 
-    link.addEventListener("click", () => {
+    hero.addEventListener(
+        "mousemove",
+        function (event) {
 
-        console.log(
-            "Opening Digital Service:",
-            link.href
-        );
+            if (window.innerWidth < 768) {
+                return;
+            }
 
-    });
 
-});
+            const x =
+                (event.clientX /
+                window.innerWidth) - 0.5;
+
+
+            const y =
+                (event.clientY /
+                window.innerHeight) - 0.5;
+
+
+            heroBackground.style.transform =
+                `scale(1.08)
+                 translate(${x * -15}px,
+                           ${y * -15}px)`;
+
+        }
+    );
+
+
+    hero.addEventListener(
+        "mouseleave",
+        function () {
+
+            heroBackground.style.transform =
+                "scale(1.08) translate(0,0)";
+
+        }
+    );
+
+}
 
 
 
 /* =====================================================
-                BACK TO TOP
+   ONLINE ADMISSION FORM
+===================================================== */
+
+const admissionForm =
+    document.getElementById(
+        "admissionForm"
+    );
+
+
+const formMessage =
+    document.getElementById(
+        "formMessage"
+    );
+
+
+if (admissionForm) {
+
+    admissionForm.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            const studentName =
+                admissionForm.elements[
+                    "studentName"
+                ].value.trim();
+
+
+            const parentName =
+                admissionForm.elements[
+                    "parentName"
+                ].value.trim();
+
+
+            const mobile =
+                admissionForm.elements[
+                    "mobile"
+                ].value.trim();
+
+
+            const email =
+                admissionForm.elements[
+                    "email"
+                ].value.trim();
+
+
+            const studentClass =
+                admissionForm.elements[
+                    "class"
+                ].value;
+
+
+            const dob =
+                admissionForm.elements[
+                    "dob"
+                ].value;
+
+
+            const address =
+                admissionForm.elements[
+                    "address"
+                ].value.trim();
+
+
+            const message =
+                admissionForm.elements[
+                    "message"
+                ].value.trim();
+
+
+
+            /* Mobile validation */
+
+            if (!/^[0-9]{10}$/.test(mobile)) {
+
+                showFormMessage(
+                    "Please enter a valid 10-digit mobile number.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+
+            /* Required fields */
+
+            if (
+                !studentName ||
+                !parentName ||
+                !mobile ||
+                !studentClass ||
+                !address
+            ) {
+
+                showFormMessage(
+                    "Please fill all required fields.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+
+            /*
+                Admission enquiry text
+            */
+
+            const admissionText =
+
+                `*SSPS ONLINE ADMISSION ENQUIRY*
+
+Student Name:
+${studentName}
+
+Parent / Guardian:
+${parentName}
+
+Mobile:
+${mobile}
+
+Email:
+${email || "Not provided"}
+
+Class:
+${studentClass}
+
+Date of Birth:
+${dob || "Not provided"}
+
+Address:
+${address}
+
+Message:
+${message || "No message"}`;
+
+
+
+            /*
+                WhatsApp submission
+
+                School WhatsApp number:
+                +91 9006852454
+            */
+
+            const whatsappNumber =
+                "919006852454";
+
+
+            const whatsappURL =
+                "https://wa.me/" +
+                whatsappNumber +
+                "?text=" +
+                encodeURIComponent(
+                    admissionText
+                );
+
+
+
+            showFormMessage(
+                "Admission enquiry is ready. Opening WhatsApp...",
+                "success"
+            );
+
+
+
+            setTimeout(function () {
+
+                window.open(
+                    whatsappURL,
+                    "_blank"
+                );
+
+            }, 800);
+
+
+
+            /*
+                Reset form
+            */
+
+            setTimeout(function () {
+
+                admissionForm.reset();
+
+            }, 1500);
+
+        }
+    );
+
+}
+
+
+
+/* =====================================================
+   FORM MESSAGE FUNCTION
+===================================================== */
+
+function showFormMessage(
+    message,
+    type
+) {
+
+    if (!formMessage) {
+        return;
+    }
+
+
+    formMessage.textContent =
+        message;
+
+
+    formMessage.className =
+        "form-message " + type;
+
+
+    setTimeout(function () {
+
+        formMessage.textContent = "";
+
+        formMessage.className =
+            "form-message";
+
+    }, 5000);
+
+}
+
+
+
+/* =====================================================
+   BACK TO TOP BUTTON
 ===================================================== */
 
 const backToTop =
@@ -526,93 +602,125 @@ const backToTop =
 
 backToTop.innerHTML = "↑";
 
+
+backToTop.className =
+    "back-to-top";
+
+
 backToTop.setAttribute(
     "aria-label",
     "Back to top"
 );
 
 
-backToTop.style.position =
-    "fixed";
-
-backToTop.style.right =
-    "20px";
-
-backToTop.style.bottom =
-    "20px";
-
-backToTop.style.width =
-    "45px";
-
-backToTop.style.height =
-    "45px";
-
-backToTop.style.border =
-    "none";
-
-backToTop.style.borderRadius =
-    "50%";
-
-backToTop.style.background =
-    "#f07b24";
-
-backToTop.style.color =
-    "#ffffff";
-
-backToTop.style.fontSize =
-    "20px";
-
-backToTop.style.fontWeight =
-    "bold";
-
-backToTop.style.cursor =
-    "pointer";
-
-backToTop.style.zIndex =
-    "999";
-
-backToTop.style.opacity =
-    "0";
-
-backToTop.style.visibility =
-    "hidden";
-
-backToTop.style.transition =
-    ".3s";
-
-
-document.body.appendChild(backToTop);
+document.body.appendChild(
+    backToTop
+);
 
 
 
-window.addEventListener("scroll", () => {
+window.addEventListener("scroll", function () {
 
     if (window.scrollY > 500) {
 
-        backToTop.style.opacity = "1";
-
-        backToTop.style.visibility =
-            "visible";
+        backToTop.classList.add(
+            "visible"
+        );
 
     } else {
 
-        backToTop.style.opacity = "0";
-
-        backToTop.style.visibility =
-            "hidden";
+        backToTop.classList.remove(
+            "visible"
+        );
 
     }
 
 });
 
 
-backToTop.addEventListener("click", () => {
+backToTop.addEventListener(
+    "click",
+    function () {
 
-    window.scrollTo({
+        window.scrollTo({
 
-        top: 0,
+            top: 0,
 
-        behavior: "smooth"
+            behavior: "smooth"
+
+        });
+
+    }
+);
+
+
+
+/* =====================================================
+   IMAGE LOADING
+===================================================== */
+
+const images =
+    document.querySelectorAll("img");
+
+
+images.forEach(function (image) {
+
+    image.addEventListener(
+        "load",
+        function () {
+
+            image.classList.add(
+                "loaded"
+            );
+
+        }
+    );
+
+
+    image.addEventListener(
+        "error",
+        function () {
+
+            console.warn(
+                "Image not found:",
+                image.src
+            );
+
+        }
+    );
+
+});
+
+
+
+/* =====================================================
+   CARD STAGGER EFFECT
+===================================================== */
+
+const cardGroups = [
+
+    ".achievement-card",
+    ".academic-card",
+    ".facility-card",
+    ".notice-card",
+    ".admission-card",
+    ".service-card"
+
+];
+
+
+cardGroups.forEach(function (selector) {
+
+    const cards =
+        document.querySelectorAll(
+            selector
+        );
+
+
+    cards.forEach(function (card, index) {
+
+        card.style.transitionDelay =
+            `${index * 80}ms`;
 
     });
 
@@ -621,18 +729,69 @@ backToTop.addEventListener("click", () => {
 
 
 /* =====================================================
-                PAGE LOADED
+   DIGITAL SERVICES
 ===================================================== */
 
-window.addEventListener("load", () => {
-
-    document.body.classList.add(
-        "page-loaded"
+const serviceLinks =
+    document.querySelectorAll(
+        ".service-card"
     );
 
-    console.log(
-        "SSPS Website Loaded Successfully 🚀"
+
+serviceLinks.forEach(function (link) {
+
+    link.addEventListener(
+        "click",
+        function () {
+
+            console.log(
+                "Opening SSPS Digital Service"
+            );
+
+        }
     );
 
 });
 
+
+
+/* =====================================================
+   CURRENT YEAR
+===================================================== */
+
+const copyright =
+    document.querySelector(
+        ".copyright"
+    );
+
+
+if (copyright) {
+
+    copyright.innerHTML =
+        `© ${new Date().getFullYear()}
+        Swami Shantanand Public School.
+        All Rights Reserved.`;
+
+}
+
+
+
+/* =====================================================
+   PAGE LOADED
+===================================================== */
+
+window.addEventListener(
+    "load",
+    function () {
+
+        document.body.classList.add(
+            "page-loaded"
+        );
+
+
+        console.log(
+            "SSPS Website Loaded Successfully 🚀"
+        );
+
+    }
+);
